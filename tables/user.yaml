@@ -1,0 +1,21 @@
+--- 
+AttributeDefinitions: 
+  - 
+    AttributeName: "ID"
+    AttributeType: "N"
+  -
+    AttributeName: "EMAIL"
+    AttributeType: "S"
+KeySchema: 
+  - 
+    AttributeName: "ID"
+    KeyType: "HASH"
+  - 
+    AttributeName: "EMAIL"
+    KeyType: "RANGE"
+ProvisionedThroughput: 
+  ReadCapacityUnits: 10
+  WriteCapacityUnits: 10
+StreamSpecification: 
+  StreamEnabled: false
+TableName: USER_LIST
