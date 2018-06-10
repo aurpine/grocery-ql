@@ -50,7 +50,7 @@ async function deleteItem(table, key) {
 // Construct a schema, using GraphQL schema language
 var schema = buildSchema(`
   type Query {
-    userById(id: ID!): User!
+    userById(id: ID!): User
     itemById(id: ID!): Item
   }
 
@@ -146,9 +146,22 @@ var schema = buildSchema(`
 
 // The root provides a resolver function for each API endpoint
 var root = {
-  user: (id) => {
-    return 1;
+  userById: (userId) => {
+    return {
+      firstName: () => { if(userId.id == '1') return "Justin"; else return "Who?"; }
+    };
   },
+  addUser: (input) => {
+    console.log(input);
+    return {
+      user: () => {
+        return {
+          firstName: () => { return input.addUserInput.firstName},
+          lastName: () => { return input.addUserInput.lastName}
+        };
+      }
+    };
+  }
 };
 
 // Run the GraphQL query '{ hello }' and print out the response
