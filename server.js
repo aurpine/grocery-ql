@@ -3,6 +3,8 @@ var express_graphql = require('express-graphql');
 var { graphql, buildSchema } = require('graphql');
 var AWS = require('aws-sdk');
 
+const port = process.env.PORT || 8080;
+
 AWS.config.update({region: 'us-west-2'});
 
 var ddb = new AWS.DynamoDB({apiVersion: '2012-10-08'});
@@ -127,5 +129,5 @@ app.use('/graphql', express_graphql({
     rootValue: root,
     graphiql: true
 }));
-app.listen(8080, () => console.log('Express GraphQL Server Now Running On localhost:4000/graphql'));
+app.listen(port, () => console.log('Express GraphQL Server Now Running On localhost:'+ port + '/graphql'));
 
