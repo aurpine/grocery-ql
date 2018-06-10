@@ -52,6 +52,7 @@ var schema = buildSchema(`
   type Query {
     userById(id: ID!): User
     itemById(id: ID!): Item
+    addOne(n: Int!): Int!
   }
 
   type Mutation {
@@ -161,6 +162,9 @@ var root = {
         };
       }
     };
+  },
+  addOne: (input) => {
+    return input.n + 1;
   }
 };
 
