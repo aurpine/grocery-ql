@@ -55,10 +55,12 @@ var schema = buildSchema(`
   }
 
   type Mutation {
-    addUser(newUserInfo: NewUserInfo!): User
+    addUser(addUserInput: AddUserInput!): AddUserPayload!
+    addItem(addItemInput: AddItemInput!): AddItemPayload!
+    addCart(userID: ID!, addCartInput: AddCartInput): AddCartPayload!
   }
 
-  input NewUserInfo {
+  input AddUserInput {
     firstName: String!
     lastName: String!
     address: AddressInput!
@@ -76,6 +78,10 @@ var schema = buildSchema(`
     carts: [Cart!]
   }
 
+  type AddUserPayload {
+    user: User
+  }
+
   type Cart {
     items: [CartItem!]!
   }
@@ -91,13 +97,23 @@ var schema = buildSchema(`
     price: Float!
   }
 
+  type AddItemPayload {
+    item: Item
+  }
+
+  input AddItemInput {
+    id: ID!
+    name: String!
+    price: Float!
+  }
+
   type Address {
     addressLine1: String!
     addressLine2: String
     city: String!
     province: String!
     postalCode: String!
-    country: String!
+    country: Country!
   }
 
   input AddressInput {
@@ -106,7 +122,25 @@ var schema = buildSchema(`
     city: String!
     province: String!
     postalCode: String!
-    country: String!
+    country: Country!
+  }
+
+  enum Country {
+    Canada
+  }
+
+  input AddCartInput {
+    cartItems: [CartItemInput!]!
+  }
+
+  input CartItemInput {
+    id: ID!
+    quantity: Int!
+  }
+
+  type AddCartPayload {
+    userID: ID!
+    cart: Cart!
   }
 `);
 
