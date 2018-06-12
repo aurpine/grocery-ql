@@ -1,2 +1,3 @@
-# grocery-ql
-A GraphQL API endpoint for a grocery app
+# GroceryQL
+
+A GraphQL API endpoint for a grocery app. Connects to AWS DynamoDB. 
