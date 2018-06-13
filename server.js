@@ -9,13 +9,8 @@ AWS.config.update({region: 'us-west-2'});
 
 var ddb = new AWS.DynamoDB({apiVersion: '2012-10-08'});
 
-function DynamotoJSON(obj) {
-  // TODO
-  return 1;
-}
-
 async function putItem(table, item) {
-  return await ddb.putItem({TableName: table, Item: item}, function(err, data) {
+  return await ddb.putItem({TableName: table, Item: item}, (err, data) => {
       if(err) {
           console.log("Error", err);
           return false;
@@ -26,17 +21,18 @@ async function putItem(table, item) {
   });
 }
 async function getItem(table, key) {
-  return await ddb.getItem({TableName: table, Key: key}, function(err, data) {
+  return await ddb.getItem({TableName: table, Key: key}).on('success', (data) => {
       if(err) {
+        console.log("HELLO");
           throw new Error(err);
       } else {
           console.log("Success", data.Item);
-          return DynamotoJSON(data.Item);
+          return parse(data.Item);
       }
   });
 }
 async function deleteItem(table, key) {
-  return await ddb.deleteItem({TableName: table, Key: key}, function(err, data) {
+  return await ddb.deleteItem({TableName: table, Key: key}, (err, data) => {
       if(err) {
           console.log("Error", err);
           return false;
@@ -147,9 +143,29 @@ var schema = buildSchema(`
 
 // The root provides a resolver function for each API endpoint
 var root = {
-  userById: (userId) => {
+  userById: async (userId) => {
+    let d = await getItem('USER_LIST', {ID: {N: userId.id}, EMAIL: {S: 'justinpu@rocketmail.com'}});
     return {
-      firstName: () => { if(userId.id == '1') return "Justin"; else return "Who?"; }
+      id: () => userId.id,
+      firstName: () => d.FirstName,
+      lastName: () => d.LastName,
+      address: (addressFields) => {
+        let address = d.Address;
+        return {
+          addressLine1: () => address.AddressLine1,
+          addressLine2: () => address.AddressLine2,
+          city: () => address.City,
+          province: () => address.Province,
+          postalCode: () => address.PostalCode,
+          country: () => address.Country
+        };
+      },
+      email: () => d.Email,
+      phone: () => d.Phone,
+      carts: (cartsFields) => {
+        let carts = d.Carts;
+        // TODO
+      }
     };
   },
   addUser: (input) => {
