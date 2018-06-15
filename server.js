@@ -49,6 +49,17 @@ var schema = buildSchema(`
     userById(id: ID!): User
     itemById(id: ID!): Item
     addOne(n: Int!): Int!
+    getRun(cart: Int!): Path
+  }
+
+  type Path {
+    stores: [Stop]
+  }
+
+  type Stop {
+    shop: String
+    address: Address!
+    items: [Cart]
   }
 
   type Mutation {
